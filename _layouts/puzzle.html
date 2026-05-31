@@ -1,0 +1,42 @@
+---
+layout: default
+---
+<article>
+  <h1>{{ page.title }}</h1>
+  <div>{{ content }}</div>
+
+  <div style="margin-top: 2rem;">
+    <input type="text" id="answerInput" placeholder="输入答案" style="padding: 0.5rem; width: 200px;">
+    <button onclick="checkAnswer()" style="padding: 0.5rem 1rem;">提交</button>
+    <p id="result" style="color: red; margin-top: 0.5rem;"></p>
+  </div>
+</article>
+
+<script>
+async function checkAnswer() {
+  const answer = document.getElementById('answerInput').value.trim();
+  if (!answer) {
+    document.getElementById('result').innerText = '请输入答案';
+    return;
+  }
+
+  const level = '{{ page.level }}';   // 从每个谜题页面的 front matter 中读取关卡号
+  const apiUrl = '你的云函数访问地址'; // 替换成你实际的云函数触发 URL
+  const fullUrl = apiUrl + '?level=' + level + '&answer=' + encodeURIComponent(answer);
+
+  try {
+    const response = await fetch(fullUrl, { redirect: 'follow' });
+
+    if (response.status === 403) {
+      document.getElementById('result').innerText = '答案错误，请再试试';
+    } else if (response.redirected) {
+      // 云函数验证正确后会返回 302 重定向到 COS 下载链接，浏览器会直接下载
+      window.location.href = response.url;
+    } else {
+      document.getElementById('result').innerText = '发生未知错误，请稍后重试';
+    }
+  } catch (error) {
+    document.getElementById('result').innerText = '网络错误，请检查网络后重试';
+  }
+}
+</script>
