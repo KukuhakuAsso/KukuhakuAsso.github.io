@@ -1,4 +1,5 @@
 import { defineConfig } from "vitepress";
+import { RssPlugin } from "vitepress-plugin-rss";
 import fs from "fs";
 import path from "path";
 
@@ -13,10 +14,20 @@ projects.forEach((project) => {
         proxy[`/${project.subPath}`] = `http://localhost:${project.devPort}`;
     }
 });
-// https://vitepress.dev/reference/site-config
+
+// 1. 从 package.json 中动态读取 name 或 description
+const pkg = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+
+// 2. 或者从系统环境变量中读取（比如多环境部署时很有用）
+const dynamicTitle = process.env.RSS_TITLE || pkg.RSS_TITLE || "默认博客";
+const dynamicDescription =
+    process.env.RSS_DESCRIPTION || pkg.RSS_DESCRIPTION || "默认博客描述";
+
+const hostname = "https://kukuhakuasso.github.io/";
+
 export default defineConfig({
-    title: "空白解谜组",
-    description: "空白永不败北",
+    title: dynamicTitle,
+    description: dynamicDescription,
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
         nav: [
@@ -39,6 +50,14 @@ export default defineConfig({
         ],
     },
     vite: {
+        plugins: [
+            RssPlugin({
+                title: dynamicTitle,
+                baseUrl: pkg.baseUrl || hostname,
+                description: pkg.description || "自动生成的描述",
+            }),
+        ],
+
         server: {
             port: 5173,
             proxy,

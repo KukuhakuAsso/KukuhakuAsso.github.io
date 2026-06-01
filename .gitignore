@@ -8,6 +8,7 @@ docs/.vitepress/cache/
 docs/.vitepress/dist/
 dist/
 .vite/
+/.vitepress/
 
 # 3. 编译器与代码检查工具的缓存
 .eslintcache

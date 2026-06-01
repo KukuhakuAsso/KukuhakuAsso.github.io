@@ -1,5 +1,7 @@
 {
     "name": "kukuhakuasso.github.io",
+    "RSS_TITLE": "空白解谜组",
+    "RSS_DESCRIPTION": "空白永不败北",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
@@ -13,21 +15,26 @@
         "build": "node scripts/build-all.mjs",
         "preview": "vite preview --outDir dist-preview"
     },
+    "baseUrl" : "https://KukuhakuAsso.github.io/",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/qqf-dev/KukuhakuAsso.github.io.git"
+        "url": "git+https://github.com/KukuhakuAsso/KukuhakuAsso.github.io.git"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "type": "commonjs",
     "bugs": {
-        "url": "https://github.com/qqf-dev/KukuhakuAsso.github.io/issues"
+        "url": "https://github.com/KukuhakuAsso/KukuhakuAsso.github.io/issues"
     },
-    "homepage": "https://github.com/qqf-dev/KukuhakuAsso.github.io#readme",
+    "homepage": "https://github.com/KukuhakuAsso/KukuhakuAsso.github.io#readme",
     "devDependencies": {
+        "feed": "^5.2.1",
         "vite": "^5.0.0",
         "vitepress": "^1.6.4",
         "vue": "^3.5.35"
+    },
+    "dependencies": {
+        "vitepress-plugin-rss": "^0.4.4"
     }
 }

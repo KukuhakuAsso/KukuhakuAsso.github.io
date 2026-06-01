@@ -29,4 +29,10 @@ features:
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
   - title: Feature C
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+
+  - icon: 🧡
+    title: RSS 订阅源
+    details: 不想错过精彩内容？复制本站链接或点击下方按钮即可订阅更新。
+    link: /feed.rss
+    linkText: 立即订阅
 ---
