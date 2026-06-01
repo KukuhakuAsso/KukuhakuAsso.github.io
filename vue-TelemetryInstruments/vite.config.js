@@ -4,6 +4,10 @@ import path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
+    base: "/vue-telemetry/",
+    server: {
+        port: 5175, // 固定端口，避免随机占用
+    },
     plugins: [vue()],
     resolve: {
         alias: {
@@ -11,16 +15,7 @@ export default defineConfig({
         },
     },
     build: {
-        // 输出到 Jekyll 的 assets/vue-telemetry 下
-        outDir: "../assets/vue-app",
+        outDir: "./output",
         emptyOutDir: true,
-        rollupOptions: {
-            output: {
-                // 固定文件名，不产生哈希
-                entryFileNames: "js/[name].js",
-                chunkFileNames: "js/[name].js",
-                assetFileNames: "[ext]/[name].[ext]",
-            },
-        },
     },
 });

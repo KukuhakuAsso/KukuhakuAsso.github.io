@@ -1,0 +1,33 @@
+{
+    "name": "kukuhakuasso.github.io",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "private": true,
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "docs:dev": "vitepress dev docs",
+        "docs:build": "vitepress build docs",
+        "docs:preview": "vitepress preview docs",
+        "dev": "node scripts/dev-all.mjs",
+        "build": "node scripts/build-all.mjs",
+        "preview": "vite preview --outDir dist-preview"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/qqf-dev/KukuhakuAsso.github.io.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "bugs": {
+        "url": "https://github.com/qqf-dev/KukuhakuAsso.github.io/issues"
+    },
+    "homepage": "https://github.com/qqf-dev/KukuhakuAsso.github.io#readme",
+    "devDependencies": {
+        "vite": "^5.0.0",
+        "vitepress": "^1.6.4",
+        "vue": "^3.5.35"
+    }
+}

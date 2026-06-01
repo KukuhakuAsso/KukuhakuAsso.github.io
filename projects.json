@@ -1,0 +1,10 @@
+[
+    {
+        "name": "TelemetryInstruments",
+        "dir": "vue-TelemetryInstruments",
+        "buildCmd": "npm run build",
+        "outputDir": "output",
+        "subPath": "vue-telemetry",
+        "devPort": 5175
+    }
+]
