@@ -45,7 +45,7 @@ const isSuccess = ref(false)
 const endingImageUrl = ref('')
 
 // ********** 替换成你的云函数 URL **********
-const apiUrl = 'https://1438673597-0z3hiqb0be.ap-shanghai.tencentscf.com'
+const apiUrl = 'https://1438673597-gggz8ep6r6.ap-shanghai.tencentscf.com'
 
 // 所有关卡的标题和描述（你可以随时修改文案）
 const puzzleData = {

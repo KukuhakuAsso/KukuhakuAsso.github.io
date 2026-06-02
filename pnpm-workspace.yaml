@@ -2,4 +2,5 @@ packages:
   - '.' # 根目录自身
   - 'vue-TelemetryInstruments' # 子项目路径
 allowBuilds:
-  esbuild: set this to true or false
+  esbuild: false
+  sharp: false

@@ -15,7 +15,7 @@
         "build": "node scripts/build-all.mjs",
         "preview": "vite preview --outDir dist-preview"
     },
-    "baseUrl" : "https://KukuhakuAsso.github.io/",
+    "baseUrl": "https://KukuhakuAsso.github.io/",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/KukuhakuAsso/KukuhakuAsso.github.io.git"
@@ -35,6 +35,7 @@
         "vue": "^3.5.35"
     },
     "dependencies": {
-        "vitepress-plugin-rss": "^0.4.4"
+        "vitepress-plugin-rss": "^0.4.4",
+        "vue-router": "^4.6.4"
     }
 }

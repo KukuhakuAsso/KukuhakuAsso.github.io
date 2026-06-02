@@ -1,5 +1,5 @@
 <script setup>
-import PuzzlePage from './puzzleLoader.vue'
+import PuzzlePage from './views/puzzleLoader.vue'
 import AudioPlayer from './components/audioPlayer.vue';
 </script>
 
@@ -7,5 +7,6 @@ import AudioPlayer from './components/audioPlayer.vue';
   <div id="app">
     <AudioPlayer />
     <router-view />
+    <PuzzlePage />
   </div>
 </template>
