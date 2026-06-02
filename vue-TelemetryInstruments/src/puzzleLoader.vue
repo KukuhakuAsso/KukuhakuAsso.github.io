@@ -1,8 +1,7 @@
 <template>
   <article>
-    <h1>{{ title }}</h1>
-    <!-- 谜题描述支持 HTML -->
-    <div v-html="content"></div>
+    <h1>{{ currentTitle }}</h1>
+    <div v-html="currentContent"></div>
 
     <div style="margin-top: 2rem;">
       <input
@@ -24,7 +23,7 @@
       </p>
     </div>
 
-    <!-- 第六关通关结束图 -->
+    <!-- 第七关通关结束图 -->
     <div v-if="endingImageUrl" class="ending">
       <img :src="endingImageUrl" alt="恭喜通关" style="max-width: 100%; border-radius: 8px;" />
     </div>
@@ -32,12 +31,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
-// 父组件（或路由）传入的谜题数据
 const props = defineProps({
-  title: { type: String, required: true },
-  content: { type: String, required: true },   // 谜题描述，可以是 HTML 字符串
   level: { type: [String, Number], required: true }
 })
 
@@ -48,8 +44,43 @@ const loading = ref(false)
 const isSuccess = ref(false)
 const endingImageUrl = ref('')
 
-// ********** 这里替换成你的真实云函数 URL **********
+// ********** 替换成你的云函数 URL **********
 const apiUrl = 'https://1438673597-0z3hiqb0be.ap-shanghai.tencentscf.com'
+
+// 所有关卡的标题和描述（你可以随时修改文案）
+const puzzleData = {
+  1: {
+    title: '一切的开始',
+    content: '<p>欢迎，侦探。请输入起始指令来获得第一条线索。</p>'
+  },
+  2: {
+    title: '谜题一',
+    content: '<p>你打开 TI01，看到一幅星图……<br>（此处替换为你的谜题描述）</p>'
+  },
+  3: {
+    title: '谜题二',
+    content: '<p>TI02 中夹着一张旧报纸……</p>'
+  },
+  4: {
+    title: '谜题三',
+    content: '<p>TI03 显示了一段摩斯码……</p>'
+  },
+  5: {
+    title: '谜题四',
+    content: '<p>TI04 是一串化学元素符号……</p>'
+  },
+  6: {
+    title: '谜题五',
+    content: '<p>TI05 是一张褪色的照片……</p>'
+  },
+  7: {
+    title: '最终谜题',
+    content: '<p>你已经接近真相。输入最后的答案，揭开一切。</p>'
+  }
+}
+
+const currentTitle = computed(() => puzzleData[props.level]?.title || '未知关卡')
+const currentContent = computed(() => puzzleData[props.level]?.content || '<p>关卡数据缺失</p>')
 
 async function checkAnswer() {
   const raw = answer.value.trim()
@@ -63,43 +94,34 @@ async function checkAnswer() {
   isSuccess.value = false
 
   try {
-    // 拼接请求 URL：level 和 answer 作为查询参数
     const url = `${apiUrl}?level=${encodeURIComponent(props.level)}&answer=${encodeURIComponent(raw)}`
     const response = await fetch(url)
     const data = await response.json()
 
-    // 判断是否成功（有 downloadUrl 表示 1-5 关，或者 endingImageUrl 表示第 6 关）
     if (data.downloadUrl) {
-      // 第 1~5 关：有文件下载
+      // 第1~6关：自动下载文件
       result.value = data.message || '🎉 答案正确，正在下载...'
       isSuccess.value = true
-
-      // 延迟 1 秒开始下载，让玩家看到成功提示
       setTimeout(() => {
         window.location.href = data.downloadUrl
       }, 1000)
     } else if (data.endingImageUrl) {
-      // 第 6 关：无下载，显示结束图 + 播放音乐
+      // 第7关：显示结束图 + 播放音乐
       result.value = data.message || '🎉 恭喜通关！'
       isSuccess.value = true
       endingImageUrl.value = data.endingImageUrl
-
-      // 播放音乐（如果返回了 musicUrl）
       if (data.musicUrl) {
         const audio = new Audio(data.musicUrl)
         audio.volume = 0.8
-        audio.play().catch(() => {
-          // 如果自动播放被浏览器阻止，可以静默失败
-          console.log('自动播放被阻止，请点击页面任意位置后重试')
-        })
+        audio.play().catch(() => {})
       }
     } else {
-      // 答案错误或其它情况
+      // 答案错误
       result.value = data.message || '答案错误，请再试试。'
     }
   } catch (error) {
     result.value = '网络错误，请检查网络后重试'
-    console.error('请求失败：', error)
+    console.error(error)
   } finally {
     loading.value = false
   }
