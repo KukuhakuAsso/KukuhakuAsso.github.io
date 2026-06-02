@@ -31,22 +31,32 @@ export default defineConfig({
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
         nav: [
-            { text: "Home", link: "/" },
-            { text: "Examples", link: "/markdown-examples" },
-        ],
-
-        sidebar: [
+            { text: "首页", link: "/" },
+            // 下拉菜单格式：把所有的谜题或工具聚合在一起
             {
-                text: "Examples",
+                text: "神秘学研究",
                 items: [
-                    { text: "Markdown Examples", link: "/markdown-examples" },
-                    { text: "Runtime API Examples", link: "/api-examples" },
+                    { text: "ARG 谜题档案", link: "/puzzles/" },
+                    { text: "神秘学论文", link: "/lore/" },
+                    { text: "解谜常用工具", link: "/tools/" },
                 ],
             },
+            { text: "关于空白", link: "/about" },
         ],
 
+        darkModeSwitchLabel: "夜间模式",
+        lightModeSwitchTitle: "切换到浅色模式",
+        darkModeSwitchTitle: "切换到深色模式",
+
         socialLinks: [
-            { icon: "github", link: "https://github.com/vuejs/vitepress" },
+            {
+                icon: "bilibili",
+                link: "https://space.bilibili.com/3706992621258932",
+            },
+            {
+                icon: "github",
+                link: "https://github.com/KukuhakuAsso/KukuhakuAsso.github.io",
+            },
         ],
     },
     vite: {
@@ -55,6 +65,14 @@ export default defineConfig({
                 title: dynamicTitle,
                 baseUrl: pkg.baseUrl || hostname,
                 description: dynamicDescription || "自动生成的描述",
+                filename: 'feed.xml',
+                filter: (page) => {
+                    // 仅当页面路由以 /posts/ 且没有显式设置 rss: false 开头时才包含在 RSS 中
+                    return (
+                        page.url.startsWith("/posts/") &&
+                        page.frontmatter.rss !== false
+                    );
+                },
             }),
         ],
 

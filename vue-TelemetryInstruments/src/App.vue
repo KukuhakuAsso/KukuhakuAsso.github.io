@@ -1,6 +1,5 @@
 <script setup>
 import PuzzlePage from './puzzleLoader.vue'
-import audioPlayer from './components/audioPlayer.vue';
 import AudioPlayer from './components/audioPlayer.vue';
 </script>
 

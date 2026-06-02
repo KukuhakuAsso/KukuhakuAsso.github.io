@@ -1,1 +1,0 @@
-import{_ as t,o as e,c as a}from"./chunks/framework.CDRyr709.js";const m=JSON.parse('{"title":"关于我们","description":"","frontmatter":{"title":"关于我们"},"headers":[],"relativePath":"about.md","filePath":"about.md"}'),o={name:"about.md"};function r(s,c,n,i,p,_){return e(),a("div")}const f=t(o,[["render",r]]);export{m as __pageData,f as default};
