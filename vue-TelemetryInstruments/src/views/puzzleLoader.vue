@@ -61,6 +61,7 @@ async function checkAnswer() {
 
   try {
     const url = `${apiUrl}?level=${encodeURIComponent(props.level)}&answer=${encodeURIComponent(raw)}`
+    console.log('实际请求URL:', url);
     const response = await fetch(url)
     const data = await response.json()
 
