@@ -6,6 +6,14 @@ import path from "path";
 export default defineConfig({
     base: "/vue-telemetry/",
     server: {
+        proxy: {
+            // 将以 /api 开头的请求代理到云函数
+            "/api": {
+                target: "https://1438673597-gggz8ep6r6.ap-shanghai.tencentscf.com",
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, ""), // 去掉 /api 前缀
+            },
+        },
         port: 5175, // 固定端口，避免随机占用
     },
     plugins: [vue()],
