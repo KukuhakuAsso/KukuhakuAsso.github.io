@@ -1,8 +1,8 @@
 <template>
     <div class="home-container">
         <div class="content">
-            <h1 class="title">🕵️ 侦探谜题</h1>
-            <p class="subtitle">一串神秘的线索等待着你……</p>
+            <h1 class="title">Telemetry Instruments</h1>
+            <p class="subtitle">今夜，风依然掠过星星。</p>
             <button class="start-btn" @click="startGame">开始探索</button>
         </div>
         <div class="decoration">
