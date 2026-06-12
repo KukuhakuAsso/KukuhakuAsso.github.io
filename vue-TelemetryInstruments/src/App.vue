@@ -1,16 +1,43 @@
+<template>
+  <div id="app" :class="{ dark: isDark }">
+    <Header :is-bgm-playing="isBgmPlaying" :is-dark="isDark" @toggle-bgm="toggleBgm" />
+    <AudioPlayer ref="audioPlayerRef" />
+    <router-view />
+  </div>
+</template>
+
 <script setup>
-import { ref, onMounted, watchEffect } from 'vue'
-import Header from './components/header.vue' 
+import { ref, onMounted, watchEffect, provide } from 'vue'
+import Header from './components/header.vue'
 import AudioPlayer from './components/audioPlayer.vue'
 
-// 引用全局唯一的 AudioPlayer 组件实例
+const volume = ref(0.75)               // 音量
 const audioPlayerRef = ref(null)
-
-// 全局状态
 const isBgmPlaying = ref(false)
 const isDark = ref(false)
 
-// 初始化夜间模式（优先读取 localStorage，其次跟随系统偏好）
+// 开启 BGM 并播放（供 Header 拖动滑块时调用）
+function playBgm() {
+  isBgmPlaying.value = true
+  audioPlayerRef.value?.play()
+}
+
+// 切换 BGM 播放/暂停
+function toggleBgm() {
+  isBgmPlaying.value = !isBgmPlaying.value
+  if (isBgmPlaying.value) {
+    audioPlayerRef.value?.play()
+  } else {
+    audioPlayerRef.value?.pause()
+  }
+}
+
+// 变更 BGM
+function changeBgm(musicData) {
+  audioPlayerRef.value?.changePlayMusic(musicData)
+}
+
+// 初始化夜间模式
 onMounted(() => {
   const saved = localStorage.getItem('darkMode')
   if (saved === 'true' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -19,30 +46,15 @@ onMounted(() => {
   }
 })
 
-// 实时响应：同步 AudioPlayer 内部的真实播放状态到全局变量
+// 同步播放状态
 watchEffect(() => {
   isBgmPlaying.value = audioPlayerRef.value?.isPlaying ?? false
 })
 
-// 桥接方法：切换 BGM 播放状态
-function toggleBgm() {
-  audioPlayerRef.value?.togglePlay()
-}
-
-// 桥接方法：切换夜间模式
-function toggleDark() {
-  isDark.value = !isDark.value
-  document.documentElement.classList.toggle('dark', isDark.value)
-  localStorage.setItem('darkMode', isDark.value.toString())
-}
+// 依赖注入
+provide('changeBgm', changeBgm)
+provide('isBgmPlaying', isBgmPlaying)
+provide('volume', volume)
+provide('playBgm', playBgm)      // 让 Header 可以开启 BGM
 </script>
 
-<template>
-  <div id="app" :class="{ dark: isDark }">
-    <Header :is-bgm-playing="isBgmPlaying" :is-dark="isDark" @toggle-bgm="toggleBgm" @toggle-dark="toggleDark" />
-
-    <AudioPlayer ref="audioPlayerRef" />
-
-    <router-view />
-  </div>
-</template>

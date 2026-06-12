@@ -37,6 +37,11 @@ export async function fetchPuzzle(level) {
     return res.json();
 }
 
+// 重新获取关卡数据
+export async function refetchPuzzle(level,lastLevel ,lastAnswer) {
+
+}
+
 // 提交答案
 export async function checkAnswer(level, answer) {
     const res = await authFetch("/api/check", {

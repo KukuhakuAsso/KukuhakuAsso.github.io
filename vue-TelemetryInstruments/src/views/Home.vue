@@ -19,7 +19,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 function startGame() {
-    router.push('/puzzle/1')
+    router.push('/puzzle/0')
 }
 </script>
 
