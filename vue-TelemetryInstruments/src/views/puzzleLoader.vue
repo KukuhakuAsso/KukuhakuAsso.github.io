@@ -90,7 +90,7 @@ const playDefault = inject('playDefault', null)
 
 // ==================== 工具函数 ====================
 function goToLevel(level) {
-  if (level < 1) return
+  if (level < 0) return
   router.push(`/puzzle/${level}`)
 }
 
@@ -214,6 +214,8 @@ async function loadPuzzle(level) {
     // 根据后端返回的 bgm 参数切换背景音乐
     if (data.bgm) {
       await switchBgm(data.bgm)
+    }else {
+      await switchBgm(null)
     }
   } catch (e) {
     if (e.message === '无权限访问该关卡') {
@@ -371,13 +373,6 @@ async function handleSubmit() {
     if (data.clueFileUrl) {
       const nextLevel = currentLevelNum + 1
       updateMaxLevel(nextLevel)
-
-      // 如果后端返回了下一关的 BGM 参数，可提前切换背景音乐
-      if (data.nextBgm) {
-        await switchBgm(data.nextBgm)
-      } else {
-        await switchBgm(null)
-      }
 
       // 缓存线索图并跳转
       await cacheImageAndNavigate(data.clueFileUrl, data.clueFileHash, nextLevel)

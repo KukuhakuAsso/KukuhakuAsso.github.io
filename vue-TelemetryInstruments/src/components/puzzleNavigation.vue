@@ -1,6 +1,6 @@
 <template>
     <div v-if="visible" class="puzzle-nav">
-        <button class="nav-btn" :disabled="currentLevel <= 1" @click="$emit('navigate', currentLevel - 1)">
+        <button class="nav-btn" :disabled="currentLevel <= 0" @click="$emit('navigate', currentLevel - 1)">
             ← 上一关
         </button>
         <span class="level-indicator">第 {{ currentLevel }} 关</span>

@@ -3,10 +3,14 @@
         <div class="content">
             <h1 class="title">Telemetry Instruments</h1>
             <p class="subtitle">今夜，风依然掠过星星。</p>
+
             <button class="start-btn" @click="startGame">开始探索</button>
+
+            <div class="audio-section">
+                <span class="tip">🎧 建议佩戴耳机，并允许网页播放音乐以获得完整体验</span>
+            </div>
         </div>
         <div class="decoration">
-            <!-- 可以放一些装饰性元素，如图标、线条等 -->
             <span class="dot"></span>
             <span class="dot"></span>
             <span class="dot"></span>
@@ -16,6 +20,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+
 const router = useRouter()
 
 function startGame() {
@@ -29,11 +34,10 @@ function startGame() {
     padding: 4rem 2rem 2rem 2rem;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     position: relative;
     overflow: hidden;
-    align-items: center;
 }
 
 .content {
@@ -53,6 +57,7 @@ function startGame() {
     font-size: 1.3rem;
     color: #555;
     margin-bottom: 2rem;
+    /* 增加与按钮的间距 */
     line-height: 1.6;
 }
 
@@ -67,7 +72,7 @@ function startGame() {
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     align-self: flex-start;
-    /* 按钮不拉伸 */
+    /* 按钮依然左对齐，符合原设计 */
 }
 
 .start-btn:hover {
@@ -76,7 +81,22 @@ function startGame() {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* 装饰性元素，让页面更生动 */
+/* 提示文字区域：位于按钮下方，居中显示 */
+.audio-section {
+    display: flex;
+    justify-content: center;
+    /* 居中 */
+    margin-top: 1.5rem;
+    /* 与按钮的间距 */
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+.tip {
+    opacity: 0.85;
+    letter-spacing: 0.5px;
+}
+
 .decoration {
     position: absolute;
     right: 10%;
@@ -113,7 +133,7 @@ function startGame() {
     }
 }
 
-/* 响应式调整 */
+/* 响应式：移动端下整体居中，按钮也居中 */
 @media (max-width: 600px) {
     .home-container {
         padding: 2rem 1rem;
@@ -127,6 +147,10 @@ function startGame() {
 
     .start-btn {
         align-self: center;
+    }
+
+    .audio-section {
+        justify-content: center;
     }
 
     .decoration {
