@@ -317,11 +317,31 @@ async function loadEndingAssets() {
     }
 
     // 加载结局音乐（从 IndexedDB 缓存读取并播放）
-    const musicBlob = await getClueImageBlob('endingMusic')
-    if (musicBlob instanceof Blob) {
-      const musicUrl = URL.createObjectURL(musicBlob)
-      // 不缓存临时 Blob URL，避免刷新后失效
-      await switchBgm({ file: musicUrl }, true)
+    let musicUrl = null;
+    try {
+      const musicBlob = await getClueImageBlob('endingMusic');
+      if (musicBlob instanceof Blob) {
+        musicUrl = URL.createObjectURL(musicBlob);
+      } else {
+        throw new Error('No blob');
+      }
+    } catch (e) {
+      // 缓存失效 → 从后端重新获取临时链接
+      console.log('结局音乐缓存失效，尝试从服务器重新获取...');
+      try {
+        const assets = await fetchEndingAssets();
+        if (assets.endingMusicUrl) {
+          musicUrl = assets.endingMusicUrl;
+          // 顺便重新下载并缓存，供本次会话使用（不强制依赖）
+          cacheEndingMusic(assets.endingMusicUrl).catch(() => { });
+        }
+      } catch (err) {
+        console.error('重新获取结局音乐失败:', err);
+      }
+    }
+
+    if (musicUrl) {
+      await switchBgm({ file: musicUrl }, true);
     }
   } catch (e) {
     endingImageUrl.value = getEndingImage()

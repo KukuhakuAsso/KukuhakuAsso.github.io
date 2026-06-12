@@ -37,9 +37,17 @@ export async function fetchPuzzle(level) {
     return res.json();
 }
 
-// 重新获取关卡数据
-export async function refetchPuzzle(level,lastLevel ,lastAnswer) {
-
+// 重新获取结局资源
+export async function fetchEndingAssets() {
+    const token = localStorage.getItem("game_token");
+    const res = await fetch("/api/ending/assets", {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "获取结局资源失败");
+    }
+    return res.json();
 }
 
 // 提交答案

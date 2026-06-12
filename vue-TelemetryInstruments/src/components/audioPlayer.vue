@@ -136,9 +136,11 @@ const changePlayMusic = async (musicData) => {
             currentBlobUrl.value = URL.createObjectURL(blob)
             audioEl.src = currentBlobUrl.value
         } else {
-            const plainUrl = (file.startsWith('/') || file.startsWith('http'))
-                ? file
-                : '/' + file.replace(/\\/g, '/')
+            const isAbsoluteUrl = file.startsWith('/') ||
+                file.startsWith('http') ||
+                file.startsWith('blob:') ||
+                file.startsWith('data:')
+            const plainUrl = isAbsoluteUrl ? file : '/' + file.replace(/\\/g, '/')
             audioEl.src = plainUrl
         }
 
