@@ -82,7 +82,7 @@ export default defineConfig({
                 title: dynamicTitle,
                 baseUrl: pkg.baseUrl || hostname,
                 description: dynamicDescription || "自动生成的描述",
-                filename: 'feed.xml',
+                filename: "feed.xml",
                 filter: (page) => {
                     // 仅当页面路由以 /posts/ 且没有显式设置 rss: false 开头时才包含在 RSS 中
                     return (
@@ -102,13 +102,27 @@ export default defineConfig({
                         handle: (req, res, next) => {
                             const url = req.url || "";
                             for (const p of projects) {
-                                if (p.subPath && url.startsWith(`/${p.subPath}/favicon`)) {
+                                if (
+                                    p.subPath &&
+                                    url.startsWith(`/${p.subPath}/favicon`)
+                                ) {
                                     const filename = path.basename(url);
-                                    const filePath = path.join(publicDir, filename);
+                                    const filePath = path.join(
+                                        publicDir,
+                                        filename,
+                                    );
                                     if (fs.existsSync(filePath)) {
                                         const ext = path.extname(filePath);
-                                        res.setHeader("Content-Type", ext === ".svg" ? "image/svg+xml" : "image/x-icon");
-                                        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                                        res.setHeader(
+                                            "Content-Type",
+                                            ext === ".svg"
+                                                ? "image/svg+xml"
+                                                : "image/x-icon",
+                                        );
+                                        res.setHeader(
+                                            "Cache-Control",
+                                            "no-cache, no-store, must-revalidate",
+                                        );
                                         res.end(fs.readFileSync(filePath));
                                         return;
                                     }
@@ -120,7 +134,17 @@ export default defineConfig({
                 },
             },
         ],
-
+        // 别名重定向，如果需要更改请同步更改根目录下jsconfig.json以便在IDE中检查路径
+        resolve: {
+            alias: {
+                "@": path.resolve(__dirname, "."), // 将 @ 映射到 .vitepress 目录
+                "@public": path.resolve(__dirname, "../public"), // vitepress静态资源
+                "@components": path.resolve(__dirname, "./theme/components"), // vitepress组件
+                "@layouts": path.resolve(__dirname, "./theme/layouts"), // vitepress layout
+                "@scripts": path.resolve(__dirname, "./theme/scripts"), // vitepress脚本
+                "@styles": path.resolve(__dirname, "./theme/styles"), // vitepress样式
+            },
+        },
         server: {
             port: 5173,
             proxy,

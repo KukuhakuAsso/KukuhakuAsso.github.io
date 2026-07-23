@@ -1,12 +1,7 @@
 <template>
     <div class="post-list">
-        <a
-            v-for="(post, index) in filteredPosts"
-            :key="post.url"
-            :href="post.url"
-            class="post-item"
-            :style="{ '--post-delay': `${index * 100}ms` }"
-        >
+        <a v-for="(post, index) in filteredPosts" :key="post.url" :href="post.url" class="post-item"
+            :style="{ '--post-delay': `${index * 100}ms` }">
             <span class="date">{{ post.date }}</span>
             <span class="title">{{ post.title }}</span>
         </a>
@@ -19,7 +14,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { data as allPosts } from './posts.data.mjs'
+import { data as allPosts } from '@scripts/posts.data.mjs'
 
 // 定义外部传入的参数，使用户可以指定要渲染的分类
 const props = defineProps({
@@ -36,7 +31,6 @@ const filteredPosts = computed(() => {
 </script>
 
 <style scoped>
-
 @keyframes post-slide-in {
     from {
         opacity: 0;

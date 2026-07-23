@@ -2,13 +2,13 @@
 import { h } from "vue";
 import DefaultTheme from "vitepress/theme";
 import "./style.css";
+import "./styles/home-entrance-motion.css";
 import HiddenText from "./components/HiddenText.vue";
 import PostList from "./layouts/PostList.vue";
 import Tags from "./components/Tags.vue";
 import Author from "./components/Author.vue";
 import HeaderBrandIcon from "./components/HeaderBrandIcon.vue";
 import CursorRevealedBackground from "./components/CursorRevealedBackground.vue";
-import HomeEntranceMotion from "./components/HomeEntranceMotion.vue";
 
 /** @type {import('vitepress').Theme} */
 export default {
@@ -26,8 +26,6 @@ export default {
   enhanceApp({ app, router, siteData }) {
     app.component("HiddenText", HiddenText);
     app.component("PostList", PostList);
-    app.component("HomeEntranceMotion", HomeEntranceMotion);
-
     // —— 跨域名数据迁移：从旧域名通过 URL 参数 _migrate 携带数据迁移到新域名 ——
     // 确保只在客户端执行 (Vitepress 构建时也会跑这里，没有 window 对象会报错)
     if (typeof window !== "undefined") {

@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "bundler",
+        "baseUrl": ".",
+        "ignoreDeprecations": "6.0",
+        "allowJs": true,
+        "checkJs": false,
+        "paths": {
+            "@/*": ["./docs/.vitepress/*"],
+            "@public/*": ["./docs/public/*"],
+            "@components/*": ["./docs/.vitepress/theme/components/*"],
+            "@layouts/*": ["./docs/.vitepress/theme/layouts/*"],
+            "@scripts/*": ["./docs/.vitepress/theme/scripts/*"],
+            "@styles/*": ["./docs/.vitepress/theme/styles/*"]
+        }
+    },
+    "include": ["./docs/.vitepress/**/*"],
+    "exclude": [
+        "node_modules",
+        "vue-TelemetryInstruments/**/*"
+    ]
+}
