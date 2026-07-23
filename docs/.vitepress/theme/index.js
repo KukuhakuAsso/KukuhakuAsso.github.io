@@ -6,65 +6,53 @@ import HiddenText from "./components/HiddenText.vue";
 import PostList from "./layouts/PostList.vue";
 import Tags from "./components/Tags.vue";
 import Author from "./components/Author.vue";
+import HeaderBrandIcon from "./components/HeaderBrandIcon.vue";
+import CursorRevealedBackground from "./components/CursorRevealedBackground.vue";
+import HomeEntranceMotion from "./components/HomeEntranceMotion.vue";
 
 /** @type {import('vitepress').Theme} */
 export default {
-    extends: DefaultTheme,
-    Layout: () => {
-        return h(DefaultTheme.Layout, null, {
-            "doc-before": () => h(Author),
-            "doc-footer-before": () => h(Tags),
+  extends: DefaultTheme,
+  Layout: () => {
+    return h(DefaultTheme.Layout, null, {
+      "layout-top": () => h(CursorRevealedBackground),
+      "nav-bar-title-before": () => h(HeaderBrandIcon),
+      "doc-before": () => h(Author),
+      "doc-footer-before": () => h(Tags),
 
-            // https://vitepress.dev/guide/extending-default-theme#layout-slots
-        });
-    },
-    enhanceApp({ app, router, siteData }) {
-        app.component("HiddenText", HiddenText);
-        app.component("PostList", PostList);
+      // https://vitepress.dev/guide/extending-default-theme#layout-slots
+    });
+  },
+  enhanceApp({ app, router, siteData }) {
+    app.component("HiddenText", HiddenText);
+    app.component("PostList", PostList);
+    app.component("HomeEntranceMotion", HomeEntranceMotion);
 
-        // —— 跨域名数据迁移：从旧域名通过 URL 参数 _migrate 携带数据迁移到新域名 ——
-        // 确保只在客户端执行 (Vitepress 构建时也会跑这里，没有 window 对象会报错)
-        if (typeof window !== "undefined") {
-            const rootStyle = document.documentElement.style;
-            const updateCursorPosition = (event) => {
-                rootStyle.setProperty("--cursor-x", `${event.clientX}px`);
-                rootStyle.setProperty("--cursor-y", `${event.clientY}px`);
-            };
+    // —— 跨域名数据迁移：从旧域名通过 URL 参数 _migrate 携带数据迁移到新域名 ——
+    // 确保只在客户端执行 (Vitepress 构建时也会跑这里，没有 window 对象会报错)
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const migrateDataString = urlParams.get("_migrate");
 
-            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-                window.addEventListener("pointermove", updateCursorPosition, {
-                    passive: true,
-                });
-            }
+      if (migrateDataString) {
+        try {
+          const migrateData = JSON.parse(decodeURIComponent(migrateDataString));
+          Object.keys(migrateData).forEach((key) => {
+            localStorage.setItem(key, migrateData[key]);
+          });
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const migrateDataString = urlParams.get("_migrate");
-
-            if (migrateDataString) {
-                try {
-                    const migrateData = JSON.parse(
-                        decodeURIComponent(migrateDataString),
-                    );
-                    Object.keys(migrateData).forEach((key) => {
-                        localStorage.setItem(key, migrateData[key]);
-                    });
-
-                    urlParams.delete("_migrate");
-                    const newSearch = urlParams.toString()
-                        ? "?" + urlParams.toString()
-                        : "";
-                    // 归一化路径：防止双斜杠（如 //vue-telemetry/）被 replaceState 误解析为跨域 URL
-                    const cleanPath = window.location.pathname.replace(
-                        /\/+/g,
-                        "/",
-                    );
-                    const cleanUrl =
-                        cleanPath + newSearch + window.location.hash;
-                    window.history.replaceState({}, "", cleanUrl);
-                } catch (e) {
-                    console.error("Vitepress 同步数据失败", e);
-                }
-            }
+          urlParams.delete("_migrate");
+          const newSearch = urlParams.toString()
+            ? "?" + urlParams.toString()
+            : "";
+          // 归一化路径：防止双斜杠（如 //vue-telemetry/）被 replaceState 误解析为跨域 URL
+          const cleanPath = window.location.pathname.replace(/\/+/g, "/");
+          const cleanUrl = cleanPath + newSearch + window.location.hash;
+          window.history.replaceState({}, "", cleanUrl);
+        } catch (e) {
+          console.error("Vitepress 同步数据失败", e);
         }
-    },
+      }
+    }
+  },
 };
