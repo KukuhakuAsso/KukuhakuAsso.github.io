@@ -78,11 +78,11 @@ onBeforeUnmount(() => {
 }
 
 .cursor-revealed-background.is-ready {
-  background: url("../../../public/favicon.svg") center / 280px no-repeat;
+  background: url("@public/favicon.svg") center / 280px no-repeat;
 }
 
 html.dark .cursor-revealed-background.is-ready {
-  background-image: url("../../../public/favicon_white.svg");
+  background-image: url("@public/favicon_white.svg");
 }
 
 @media (hover: none), (pointer: coarse) {
