@@ -209,6 +209,8 @@ async function cacheOneResource(res, level) {
     let cacheKey
     if (res.type === 'image' && res.purpose === 'clue' && level != null) {
         cacheKey = `clue_${level}`
+    } else if (res.type === 'image' && res.purpose?.startsWith('ending')) {
+        cacheKey = 'ending'
     } else if (res.type === 'image') {
         cacheKey = String(res.purpose || 'unknown')
     } else if (res.type === 'audio') {
@@ -234,7 +236,7 @@ async function cacheOneResource(res, level) {
 
     // 资源无 url 则仅缓存配置（fetchPuzzle 返回的 meta-only 资源）
     if (!res.url) {
-        if (res.type === 'audio' && res.purpose === 'bgm') {
+        if (res.type === 'audio' && (res.purpose === 'bgm' || res.purpose === 'ending-bgm')) {
             const bgmConfig = buildBgmConfig(res)
             if (bgmConfig) {
                 cacheBgmConfig(bgmConfig)
@@ -263,7 +265,7 @@ async function cacheOneResource(res, level) {
     if (res.hash) localStorage.setItem(`clue_hash_${cacheKey}`, res.hash)
 
     // 音频 BGM：额外缓存配置到 localStorage
-    if (res.type === 'audio' && res.purpose === 'bgm') {
+    if (res.type === 'audio' && (res.purpose === 'bgm' || res.purpose === 'ending-bgm')) {
         const bgmConfig = buildBgmConfig(res)
         if (bgmConfig) {
             cacheBgmConfig(bgmConfig)
@@ -685,7 +687,7 @@ async function loadEndingAssets() {
             try {
                 const assets = await fetchEndingAssets()
                 await cacheAllResources(assets.resources)
-                const finalBgm = findResource(assets.resources, 'audio', 'bgm')
+                const finalBgm = findResource(assets.resources, 'audio', 'ending-bgm')
                 if (finalBgm) {
                     await switchBgm(buildBgmConfig(finalBgm))
                 }
@@ -741,16 +743,13 @@ async function handleSubmit() {
         const currentLevelNum = parseInt(props.level)
 
         // ---------- 通关结局 ----------
-        const endingImage = findResource(data.resources, 'image', 'ending')
-        if (endingImage) {
+        if (data.celebrationType === 'final') {
             // 缓存结局资源（无需关卡号）
             await cacheAllResources(data.resources)
 
             result.value = '🎉 正在解锁最终真相...'
 
-            if (data.reward) {
-                rewardCheck.value = true
-            }
+            rewardCheck.value = true
 
             setGameCompleted()
             gameCompleted.value = true
