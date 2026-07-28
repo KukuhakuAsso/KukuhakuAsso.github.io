@@ -125,6 +125,7 @@ const changePlayMusic = async (musicData, requestId) => {
     audioEl.pause()
 
     const isEncrypted = file.toLowerCase().endsWith('.enc')
+      || (!!keyBase64 && (file.startsWith('blob:') || file.startsWith('http')))
 
     try {
         if (isEncrypted) {
@@ -135,7 +136,7 @@ const changePlayMusic = async (musicData, requestId) => {
                 return
             }
 
-            const encUrl = (file.startsWith('/') || file.startsWith('http'))
+            const encUrl = (file.startsWith('/') || file.startsWith('http') || file.startsWith('blob:'))
                 ? file
                 : '/' + file.replace(/\\/g, '/')
 
