@@ -50,9 +50,9 @@ export async function saveClueImageBlob(level, blob) {
 }
 
 /**
- * 读取图片 Blob
+ * 读取资源 Blob
  */
-export async function getClueImageBlob(level) {
+export async function getResourceBlob(level) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx = db.transaction(STORE_NAME, "readonly");
@@ -90,7 +90,7 @@ export function getGameCompleted() {
 }
 
 /**
- * 获取通关成功的永久展示图片 URL
+ * 获取通关成功的图片 URL（已废弃：URL 有时限，统一从 IndexedDB 读取 blob）
  * @returns {string}
  */
 export function getEndingImage() {
@@ -98,10 +98,8 @@ export function getEndingImage() {
 }
 
 /**
- * 设置游戏通关状态，并持久化保存通关图片 URL
- * @param {string} endingImageUrl
+ * 设置游戏通关状态（不再保存 URL，结局图片从 IndexedDB 缓存读取）
  */
-export function setGameCompleted(endingImageUrl) {
+export function setGameCompleted() {
     localStorage.setItem(COMPLETED_KEY, "true");
-    localStorage.setItem(ENDING_IMG_KEY, endingImageUrl || "");
 }
