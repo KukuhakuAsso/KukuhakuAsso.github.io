@@ -222,22 +222,18 @@ async function cacheOneResource(res, level) {
     if (res.type === 'image') {
         const localHash = localStorage.getItem(`clue_hash_${cacheKey}`)
         if (cached instanceof Blob && localHash === res.hash) {
-            console.log(`资源已缓存，跳过: key=${cacheKey}`)
             return
         }
     } else if (cached instanceof Blob) {
         // 如果缓存 MIME 类型与 meta 不一致（如旧缓存 text/plain），强制重新下载
         if (res.meta?.mimeType && cached.type !== res.meta.mimeType) {
-            console.log(`缓存 MIME 不匹配 (${cached.type} → ${res.meta.mimeType})，重新下载: key=${cacheKey}`)
         } else {
-            console.log(`资源已缓存，跳过: key=${cacheKey}`)
             return
         }
     }
 
     // 资源无 url 则仅缓存配置（fetchPuzzle 返回的 meta-only 资源）
     if (!res.url) {
-        console.log(`资源无 URL，仅缓存配置: key=${cacheKey}, fileKey=${res.meta?.fileKey}`)
         if (res.type === 'audio' && res.purpose === 'bgm') {
             const bgmConfig = buildBgmConfig(res)
             if (bgmConfig) {
@@ -248,8 +244,6 @@ async function cacheOneResource(res, level) {
         return
     }
 
-    console.log(`开始缓存资源: key=${cacheKey}, url=${res.url?.substring(0, 80)}...`)
-
     // 下载
     const response = await fetch(res.url)
     if (!response.ok) throw new Error(`${cacheKey}: HTTP ${response.status}`)
@@ -259,18 +253,14 @@ async function cacheOneResource(res, level) {
     if (res.meta?.mimeType && blob.type !== res.meta.mimeType) {
         blob = new Blob([await blob.arrayBuffer()], {type: res.meta.mimeType})
     }
-    console.log(`下载完成: key=${cacheKey}, size=${blob.size}, type=${blob.type}`)
-
     // 解密（meta 含密钥信息时，但音频不解密，留给 audioPlayer 处理）
     if (res.meta?.keyBase64 && res.meta?.ivBase64 && res.type !== 'audio') {
         blob = await decryptBlob(blob, res.meta)
-        console.log(`解密完成: key=${cacheKey}`)
     }
 
     // 存入 IndexedDB
     await saveClueImageBlob(cacheKey, blob)
     if (res.hash) localStorage.setItem(`clue_hash_${cacheKey}`, res.hash)
-    console.log(`缓存完成: key=${cacheKey}`)
 
     // 音频 BGM：额外缓存配置到 localStorage
     if (res.type === 'audio' && res.purpose === 'bgm') {
@@ -289,12 +279,9 @@ async function cacheOneResource(res, level) {
  */
 async function cacheAllResources(resourcesList, level) {
     if (!resourcesList || !Array.isArray(resourcesList)) {
-        console.log('cacheAllResources: 无资源或格式错误', resourcesList)
+        console.warn('cacheAllResources: 无资源或格式错误', resourcesList)
         return
     }
-
-    console.log(`cacheAllResources: 开始缓存 ${resourcesList.length} 个资源, level=${level}`,
-        resourcesList.map(r => `${r.type}/${r.purpose}`))
 
     const results = await Promise.allSettled(
         resourcesList.map(res => cacheOneResource(res, level))
@@ -304,8 +291,6 @@ async function cacheAllResources(resourcesList, level) {
     if (failed.length > 0) {
         console.warn(`cacheAllResources: ${failed.length}/${results.length} 个资源缓存失败`,
             failed.map(r => r.reason?.message || r.reason))
-    } else {
-        console.log(`cacheAllResources: ${results.length} 个资源全部缓存完成`)
     }
 }
 
@@ -383,7 +368,6 @@ function resetGame() {
 function goToLevel(level) {
     if (level < 0) return
     router.push(`/puzzle/${level}`)
-    console.log('跳转至关卡', level)
 }
 
 function updateMaxLevel(level) {
@@ -431,7 +415,6 @@ async function switchBgm(bgmConfig, skipCache = false) {
             const cachedBlob = await getResourceBlob(cacheKey)
             if (cachedBlob instanceof Blob) {
                 resolvedConfig = {...bgmConfig, file: URL.createObjectURL(cachedBlob)}
-                console.log(`switchBgm: 使用本地缓存音频 blob, musicId=${bgmConfig.musicId}`)
             } else {
                 console.warn(`switchBgm: 本地缓存未命中 musicId=${bgmConfig.musicId}, 回退原始 URL`)
             }
@@ -577,11 +560,9 @@ async function loadPuzzle(level) {
         await cacheAllResources(data.resources, level)
         const bgmResource = findResource(data.resources, 'audio', 'bgm')
         if (bgmResource?.meta?.musicId) {
-            console.log(`loadPuzzle: 发现 BGM 资源, musicId=${bgmResource.meta.musicId}`)
             await switchBgm(buildBgmConfig(bgmResource))
         } else {
             // 无 BGM 资源或无 meta 信息时播放默认音乐
-            console.log('loadPuzzle: 无 BGM meta，播放默认音乐')
             if (playDefault) playDefault()
         }
     } catch (e) {
@@ -648,7 +629,7 @@ async function retryLoadClue() {
     clueImageError.value = false
     await nextTick()
     await loadLocalClue(props.level)
-    console.log(clueImageError.value)
+    console.error(clueImageError.value)
 }
 
 // 加载通关结局资源（图片 + 音乐）
@@ -715,7 +696,6 @@ async function loadEndingAssets() {
 
         if (!rewardCheck.value) {
             rewardCheck.value = (await fetchEndingAssets()).reward || false
-            console.log('剩余奖励', rewardCheck.value)
             if (rewardCheck.value != true) {
                 rewardCheck.value = false
             }
