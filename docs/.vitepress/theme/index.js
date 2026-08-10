@@ -10,6 +10,7 @@ import Tags from "./components/Tags.vue";
 import Author from "./components/Author.vue";
 import HeaderBrandIcon from "./components/HeaderBrandIcon.vue";
 import CursorRevealedBackground from "./components/CursorRevealedBackground.vue";
+import WikiTable from "./components/WikiTable.vue";
 
 /** @type {import('vitepress').Theme} */
 export default {
@@ -27,6 +28,7 @@ export default {
   enhanceApp({ app, router, siteData }) {
     app.component("HiddenText", HiddenText);
     app.component("PostList", PostList);
+    app.component("WikiTable", WikiTable);
     // —— 跨域名数据迁移：从旧域名通过 URL 参数 _migrate 携带数据迁移到新域名 ——
     // 确保只在客户端执行 (Vitepress 构建时也会跑这里，没有 window 对象会报错)
     if (typeof window !== "undefined") {
