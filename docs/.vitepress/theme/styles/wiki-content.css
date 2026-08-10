@@ -3,6 +3,13 @@
  * 适用于从 wiki 页转载、包含大量内联 HTML 的文章
  * -------------------------------------------------------------------------- */
 
+/* —— 分栏列表：ColumnList 组件（对应 wiki 模板 {{Column}}） —— */
+.vp-doc .col-list {
+  list-style: disc;
+  padding-left: 1.4em;
+  margin-left: 0;
+}
+
 /* —— 表格：wikitable 类 —— */
 .vp-doc .wikitable {
   border-collapse: collapse;
