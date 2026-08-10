@@ -28,3 +28,6 @@ Thumbs.db
 .vscode/
 *.suo
 *.ntvs*
+
+# 6. 临时 Python 脚本
+tmp_scripts/
