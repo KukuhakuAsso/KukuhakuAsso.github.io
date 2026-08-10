@@ -3,6 +3,7 @@ import { h } from "vue";
 import DefaultTheme from "vitepress/theme";
 import "./style.css";
 import "./styles/home-entrance-motion.css";
+import "./styles/wiki-content.css";
 import HiddenText from "./components/HiddenText.vue";
 import PostList from "./layouts/PostList.vue";
 import Tags from "./components/Tags.vue";

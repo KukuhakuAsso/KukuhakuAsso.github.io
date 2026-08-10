@@ -1,0 +1,104 @@
+/**
+ * 维基转载文章内容样式（wikitable / kbd / abbr / figure 等）
+ * 适用于从 wiki 页转载、包含大量内联 HTML 的文章
+ * -------------------------------------------------------------------------- */
+
+/* —— 表格：wikitable 类 —— */
+.vp-doc .wikitable {
+  border-collapse: collapse;
+  margin: 1em 0;
+  background-color: var(--vp-c-bg);
+  max-width: 100%;
+}
+
+.vp-doc .wikitable th,
+.vp-doc .wikitable td {
+  border: 1px solid var(--vp-c-divider);
+  padding: 0.35em 0.7em;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.7;
+}
+
+.vp-doc .wikitable th {
+  background-color: var(--vp-c-bg-alt);
+  font-weight: 600;
+}
+
+/* —— 文档内容容器允许横向滚动，兜底超宽表格/代码 —— */
+.vp-doc {
+  overflow-x: auto;
+}
+
+/* —— kbd：键盘/密码样式 —— */
+.vp-doc kbd {
+  display: inline-block;
+  padding: 0.15em 0.5em;
+  margin: 0 0.15em;
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.85em;
+  line-height: 1.4;
+  color: var(--vp-c-text-1);
+  background-color: var(--vp-c-bg-alt);
+  border: 1px solid var(--vp-c-divider);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+  white-space: nowrap;
+}
+
+/* —— abbr：缩写提示 —— */
+.vp-doc abbr {
+  text-decoration: underline dotted;
+  cursor: help;
+}
+
+/* —— 图片排版 —— */
+.vp-doc figure {
+  max-width: 100%;
+}
+.vp-doc figure img {
+  max-width: 100%;
+  height: auto;
+}
+.vp-doc figcaption {
+  font-size: 0.85em;
+  color: var(--vp-c-text-2);
+  text-align: center;
+  margin-top: 4px;
+  word-break: break-word;
+}
+
+/* —— serif 字体类（用于“谜底赠言”等） —— */
+.vp-doc .serif {
+  font-family: Georgia, "Times New Roman", "Songti SC", "SimSun", serif;
+}
+
+/* —— 纯文本 <pre>（非代码块，如 Overview Ⅰ 的密文列表） —— */
+.vp-doc pre:not([class]) {
+  background-color: var(--vp-code-block-bg);
+  padding: 16px 20px;
+  border-radius: 8px;
+  line-height: 1.7;
+  font-family: var(--vp-font-family-mono);
+  color: var(--vp-c-text-1);
+  overflow-x: auto;
+}
+
+/* —— 移动端：浮动图改为居中堆叠 —— */
+@media (max-width: 640px) {
+  .vp-doc figure {
+    float: none !important;
+    clear: both !important;
+    margin: 1em auto !important;
+    text-align: center;
+  }
+  .vp-doc figure img {
+    display: inline-block;
+  }
+  /* 多列 li 列表在手机上恢复单列 */
+  .vp-doc ul[style*="column-width"] {
+    column-width: auto !important;
+    columns: 1 !important;
+  }
+}
