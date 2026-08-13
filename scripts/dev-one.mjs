@@ -7,10 +7,11 @@
 //   npm run dev:project -- TelemetryInstruments
 //   npm run dev:project
 
-import { spawn, execSync } from "child_process";
+import { spawn } from "child_process";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { spawnOptions, killTree } from "./proc-utils.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, "..");
@@ -140,12 +141,7 @@ if (!project) {
 
 console.log(`🚀 正在启动子项目开发服务器: ${project.name} (端口: ${project.devPort})\n`);
 
-const spawnOptions = {
-    shell: true,
-    stdio: ["ignore", "inherit", "inherit"],
-};
-
-const subServer = spawn("npm", ["run", "dev"], {
+const subServer = spawn("pnpm", ["run", "dev"], {
     ...spawnOptions,
     cwd: path.resolve(ROOT_DIR, project.dir),
 });
@@ -158,17 +154,7 @@ const killSub = () => {
     console.log("\n🛑 正在停止开发服务器...");
 
     if (subServer.pid) {
-        try {
-            if (process.platform === "win32") {
-                execSync(`taskkill /pid ${subServer.pid} /T /F`, {
-                    stdio: "ignore",
-                });
-            } else {
-                subServer.kill("SIGKILL");
-            }
-        } catch (e) {
-            // 忽略已退出的进程抛错
-        }
+        killTree(subServer.pid);
     }
 
     console.log("✨ 开发服务器已退出。\n");

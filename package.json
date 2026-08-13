@@ -31,9 +31,9 @@
     "homepage": "https://github.com/KukuhakuAsso/KukuhakuAsso.github.io#readme",
     "devDependencies": {
         "feed": "^5.2.1",
-        "vite": "^5.0.0",
-        "vitepress": "^1.6.4",
-        "vue": "^3.5.35"
+        "vite": "^8.2.0",
+        "vitepress": "^2.0.0-alpha.19",
+        "vue": "^3.5.40"
     },
     "dependencies": {
         "vitepress-plugin-rss": "^0.4.4",

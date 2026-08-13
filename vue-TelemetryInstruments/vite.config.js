@@ -29,7 +29,7 @@ export default defineConfig(({ mode }) => {
         plugins: [vue()],
         resolve: {
             alias: {
-                "@": path.resolve(__dirname, "src"), // 将 @ 映射到 src 目录
+                "@": path.resolve(import.meta.dirname, "src"), // 将 @ 映射到 src 目录
             },
         },
         build: {

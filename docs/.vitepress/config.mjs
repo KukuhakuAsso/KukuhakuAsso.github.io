@@ -3,7 +3,7 @@ import { RssPlugin } from "vitepress-plugin-rss";
 import fs from "fs";
 import path from "path";
 
-const ROOT = path.resolve(__dirname, "../..");
+const ROOT = path.resolve(import.meta.dirname, "../..");
 const projects = JSON.parse(
     fs.readFileSync(path.join(ROOT, "projects.json"), "utf-8"),
 );
@@ -96,7 +96,7 @@ export default defineConfig({
             {
                 name: "favicon-rewrite",
                 configureServer(server) {
-                    const publicDir = path.resolve(__dirname, "public");
+                    const publicDir = path.resolve(import.meta.dirname, "public");
                     server.middlewares.stack.unshift({
                         route: "",
                         handle: (req, res, next) => {
@@ -137,12 +137,12 @@ export default defineConfig({
         // 别名重定向，如果需要更改请同步更改根目录下jsconfig.json以便在IDE中检查路径
         resolve: {
             alias: {
-                "@": path.resolve(__dirname, "."), // 将 @ 映射到 .vitepress 目录
-                "@public": path.resolve(__dirname, "../public"), // vitepress静态资源
-                "@components": path.resolve(__dirname, "./theme/components"), // vitepress组件
-                "@layouts": path.resolve(__dirname, "./theme/layouts"), // vitepress layout
-                "@scripts": path.resolve(__dirname, "./theme/scripts"), // vitepress脚本
-                "@styles": path.resolve(__dirname, "./theme/styles"), // vitepress样式
+                "@": path.resolve(import.meta.dirname, "."), // 将 @ 映射到 .vitepress 目录
+                "@public": path.resolve(import.meta.dirname, "../public"), // vitepress静态资源
+                "@components": path.resolve(import.meta.dirname, "./theme/components"), // vitepress组件
+                "@layouts": path.resolve(import.meta.dirname, "./theme/layouts"), // vitepress layout
+                "@scripts": path.resolve(import.meta.dirname, "./theme/scripts"), // vitepress脚本
+                "@styles": path.resolve(import.meta.dirname, "./theme/styles"), // vitepress样式
             },
         },
         server: {
