@@ -33,13 +33,13 @@ Puzzle解谜游戏「TelemetryInstruments」，Vue 3 + Vite 构建的单页应�
 - [VitePress](https://vitepress.dev) 2.x
 - Vue 3.5
 - Vite 8
-- Node.js 20+
-- pnpm
+- Node.js 22.13+
+- pnpm 11+
 
 ## 环境要求
 
-- Node.js 20 或更高版本
-- pnpm（推荐 10 或更高版本）
+- Node.js 22.13 或更高版本
+- pnpm（推荐 11 或更高版本）
 
 ## 目录结构
 
