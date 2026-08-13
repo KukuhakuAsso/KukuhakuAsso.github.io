@@ -108,7 +108,6 @@ pnpm run dev    # 主站与所有子项目一起启动
 
 - 子项目的 `vite.config.js` 会自动从 `projects.json` 读取 `base`、`port`、`proxyApi`、`outputDir`，无需手动配置；
 - 代理目标通过子项目内的 `.env.development` 配置（模板中为 `API_PROXY_TARGET` / `API_PROXY_REWRITE`）；
-- 代理前缀与子路径的斜杠会自动归一化：cmd、PowerShell 与 Git Bash 下，`--proxy /api-demo` 与 `--proxy api-demo` 均可正确识别。
 
 `projects.json` 字段说明：
 
