@@ -28,7 +28,7 @@ export function killTree(pid) {
             // Unix 下按进程组整体 SIGKILL（依赖 detached: true）
             process.kill(-pid, "SIGKILL");
         }
-    } catch (e) {
+    } catch {
         // 进程可能已退出，忽略抛错
     }
 }
