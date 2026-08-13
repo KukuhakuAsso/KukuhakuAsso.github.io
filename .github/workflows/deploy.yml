@@ -68,7 +68,7 @@ jobs:
               uses: actions/download-artifact@v4
               with:
                   name: site
-                  path: .
+                  path: dist-preview
 
             #把编译好的静态网页，推送到当前仓库的 dist 分支
             - name: Push Assets to Dist Branch
