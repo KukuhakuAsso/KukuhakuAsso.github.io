@@ -13,6 +13,7 @@
         "docs:preview": "vitepress preview docs",
         "dev": "node scripts/dev-all.mjs",
         "proj:dev": "node scripts/dev-one.mjs",
+        "new:project": "node scripts/create-project.mjs",
         "build": "node scripts/build-all.mjs",
         "preview": "vite preview --outDir dist-preview"
     },

@@ -16,7 +16,7 @@
 | 页面         | 路径          | 说明                       |
 | ------------ | ------------- | -------------------------- |
 | 首页         | `/`         | 站点入口                   |
-| 博客         | `/blog/`    | 开发日志                   |
+| 博客         | `/blog/`    | 日志                       |
 | ARG 谜题档案 | `/puzzles/` | 谜题档案索引               |
 | 神秘学论文   | `/lore/`    | 神秘学研究文章             |
 | 解谜常用工具 | `/tools/`   | 工具索引                   |
@@ -74,3 +74,50 @@ pnpm install
 | `pnpm run preview`    | 本地预览`dist-preview/` 构建产物              |
 
 构建时，脚本会根据 `projects.json` 中的 `buildCmd` 字段执行子项目构建；若该命令失败，则回退到默认命令 `pnpm run build`。
+
+## 新增vite子项目
+
+`projects.json` 是子项目的唯一注册点，主站配置、构建与开发脚本都会自动读取它，无需手动同步。
+
+使用脚手架命令一键创建：
+
+```bash
+pnpm run new:project <项目名> [--dir 目录] [--port 端口] [--subpath 子路径] [--proxy 代理前缀,可使用多项]
+```
+
+示例：
+
+```bash
+pnpm run new:project MyGame --subpath MyGame --proxy api-demo
+```
+
+该命令会自动完成：
+
+1. 生成子项目模板（`package.json`、`vite.config.js`、`index.html`、`src/` 等）；
+2. 注册到 `projects.json`（端口默认取现有最大端口 + 1）；
+3. 注册到 `pnpm-workspace.yaml`。
+
+创建后执行：
+
+```bash
+pnpm install    # 安装新子项目的依赖
+pnpm run dev    # 主站与所有子项目一起启动
+```
+
+说明：
+
+- 子项目的 `vite.config.js` 会自动从 `projects.json` 读取 `base`、`port`、`proxyApi`、`outputDir`，无需手动配置；
+- 代理目标通过子项目内的 `.env.development` 配置（模板中为 `API_PROXY_TARGET` / `API_PROXY_REWRITE`）；
+- 代理前缀与子路径的斜杠会自动归一化：cmd、PowerShell 与 Git Bash 下，`--proxy /api-demo` 与 `--proxy api-demo` 均可正确识别。
+
+`projects.json` 字段说明：
+
+| 字段          | 说明                                     |
+| ------------- | ---------------------------------------- |
+| `name`      | 项目名                                   |
+| `dir`       | 子项目目录名                             |
+| `buildCmd`  | 构建命令（失败时回退`pnpm run build`） |
+| `outputDir` | 构建产物目录                             |
+| `subPath`   | 部署子路径（也是 dev 代理路径）          |
+| `devPort`   | 开发服务器端口                           |
+| `proxyApi`  | 需要主站转发的代理前缀列表               |
