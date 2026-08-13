@@ -9,6 +9,7 @@ function normalizeAnswerLoose(input) {
     if (input == null) return "";
     // 如果全局对象提供了更精确的实现，直接使用
     if (
+        typeof window !== "undefined" &&
         window.PuzzleSecretVerifier &&
         typeof window.PuzzleSecretVerifier.normalizeAnswerLoose === "function"
     ) {
@@ -33,6 +34,7 @@ function normalizeAnswerLoose(input) {
 function normalizeAnswerStrict(input) {
     if (input == null) return "";
     if (
+        typeof window !== "undefined" &&
         window.PuzzleSecretVerifier &&
         typeof window.PuzzleSecretVerifier.normalizeAnswerStrict === "function"
     ) {

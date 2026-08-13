@@ -8,7 +8,7 @@ const MAX_ANSWER_LENGTH = 200; // 防止超长字符串攻击
 // 可选：字符白名单校验（拒绝明显恶意的特殊字符）
 function isAnswerSafe(str) {
     // 允许字母、数字、空格、常见标点（可按需增减）
-    return /^[\p{L}\p{N}\s.,!?\-+*/@#$%^&()\[\]{}|~`'"<>:;]+$/u.test(str);
+    return /^[\p{L}\p{N}\s.,!?\-+*/@#$%^&()[\]{}|~`'"<>:;]+$/u.test(str);
 }
 
 // --- 在 checkAnswer 中的使用模式 ---

@@ -4,6 +4,7 @@ on:
     push:
         branches:
             - main
+    workflow_dispatch:
 
 permissions:
     contents: write
@@ -15,7 +16,8 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    build_and_deploy:
+    # 1. 构建：主站 + 所有子项目，产物合并到 dist-preview
+    build:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Source
@@ -42,10 +44,31 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-vitepress-
 
-            - name: Install & Build 项目
+            - name: Install & Build
               run: |
                   pnpm install --frozen-lockfile
                   pnpm run build
+
+            - name: Upload build artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: site
+                  path: dist-preview
+                  retention-days: 1
+
+    # 2. 部署到 dist 分支（CVM 拉取模式）+ 触发钩子
+    deploy_dist:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Source
+              uses: actions/checkout@v4
+
+            - name: Download build artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: site
+                  path: .
 
             #把编译好的静态网页，推送到当前仓库的 dist 分支
             - name: Push Assets to Dist Branch
@@ -59,7 +82,8 @@ jobs:
               run: |
                   curl -k -s -X POST "${{ secrets.HOOK_URL }}" > /dev/null 2>&1
 
-    deploy_redirect_to_pages:
+    # 3. 部署 GitHub Pages 跳转页（.github/page）
+    deploy_pages:
         runs-on: ubuntu-latest
         environment:
             name: github-pages

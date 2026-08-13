@@ -45,12 +45,14 @@ Puzzle解谜游戏「TelemetryInstruments」，Vue 3 + Vite 构建的单页应�
 
 ```
 .
+├── .github/workflows/         # CI / 部署工作流
 ├── docs/                      # VitePress 主站
 │   ├── .vitepress/            # 站点配置与自定义主题
 │   ├── posts/                 # 文章正文
 │   ├── puzzles/ lore/ tools/  # 各栏目索引页
 │   └── public/                # 静态资源（图片、PDF 等）
 ├── vue-TelemetryInstruments/  # 子项目：解谜 SPA
+│   └── tests/                 # 子项目单元测试
 ├── scripts/                   # 构建与开发编排脚本
 ├── projects.json              # 子项目构建配置表
 └── dist-preview/              # 构建产物（已 gitignore）
@@ -74,6 +76,24 @@ pnpm install
 | `pnpm run preview`    | 本地预览`dist-preview/` 构建产物              |
 
 构建时，脚本会根据 `projects.json` 中的 `buildCmd` 字段执行子项目构建；若该命令失败，则回退到默认命令 `pnpm run build`。
+
+## 代码检查与 CI
+
+| 命令                          | 说明                                              |
+| ----------------------------- | ------------------------------------------------- |
+| `pnpm run lint`             | ESLint + markdownlint 静态检查                     |
+| `pnpm run check:projects`   | 检测 `projects.json` 中端口/子路径/代理前缀的冲突 |
+| `pnpm run check:links`      | 检查 markdown 中失效的链接与资源                   |
+| `pnpm run test`             | 运行所有子项目的单元测试（Node 内置测试运行器）     |
+| `pnpm run clean`            | 清理本地临时构建文件；`--all` 连 `dist-preview/` 一并删除 |
+
+- 子项目测试位于各子项目的 `tests/` 目录，`node --test` 会自动发现 `*.test.js`；
+- `pnpm run clean -- --dry` 可预览清理项，不真正删除。
+
+### CI（GitHub Actions）
+
+- `.github/workflows/ci.yml`：对 `main` 推送与所有 Pull Request 运行 lint、代理冲突检测、链接检查、子项目测试与构建校验；
+- `.github/workflows/deploy.yml`：对 `main` 推送（或手动触发）构建并部署——推送到 `dist` 分支供 CVM 拉取，并部署 GitHub Pages 跳转页。
 
 ## 新增vite子项目
 

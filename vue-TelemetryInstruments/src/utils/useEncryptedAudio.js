@@ -1,10 +1,13 @@
 // composables/useEncryptedAudio.js
 import { ref, onBeforeUnmount } from "vue";
+import { authFetch } from "./authFetch.js";
 
 export function useEncryptedAudio() {
     const audioSrc = ref("");
     const loading = ref(false);
     let currentBlobUrl = null;
+    let rawKey = null;
+    let iv = null;
 
     // 安全地清除敏感数据
     function clear() {
@@ -24,9 +27,7 @@ export function useEncryptedAudio() {
             // 1. 并行：拉取加密文件 + 请求密钥（提高速度）
             const [encRes, keyRes] = await Promise.all([
                 fetch(encFileUrl),
-                fetch(`/api/get-audio-key?id=${musicId}`, {
-                    headers: { Authorization: `Bearer ${getUserToken()}` },
-                }),
+                authFetch(`/api/get-audio-key?id=${musicId}`),
             ]);
 
             if (!encRes.ok || !keyRes.ok) throw new Error("资源或密钥获取失败");
@@ -35,10 +36,10 @@ export function useEncryptedAudio() {
             const { keyBase64, ivBase64 } = await keyRes.json();
 
             // 2. 将密钥和 IV 转换为 CryptoKey / Uint8Array
-            const rawKey = Uint8Array.from(atob(keyBase64), (c) =>
+            rawKey = Uint8Array.from(atob(keyBase64), (c) =>
                 c.charCodeAt(0),
             );
-            const iv = Uint8Array.from(atob(ivBase64), (c) => c.charCodeAt(0));
+            iv = Uint8Array.from(atob(ivBase64), (c) => c.charCodeAt(0));
 
             const cryptoKey = await crypto.subtle.importKey(
                 "raw",

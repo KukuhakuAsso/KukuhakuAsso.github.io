@@ -1,0 +1,82 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+permissions:
+    contents: read
+
+concurrency:
+    group: ci-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    # 代码质量：静态检查 + 代理冲突检测 + 子项目测试
+    quality:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 11
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: pnpm
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Lint (ESLint + markdownlint)
+              run: pnpm run lint
+
+            - name: 代理与子项目配置冲突检测
+              run: pnpm run check:projects
+
+            - name: 链接/资源检查
+              run: pnpm run check:links
+
+            - name: 子项目测试
+              run: pnpm run test
+
+    # 构建校验：确保主站与所有子项目可成功构建
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 11
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: pnpm
+
+            - name: Cache VitePress / Vite 构建缓存
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      docs/.vitepress/cache
+                      vue-TelemetryInstruments/node_modules/.vite
+                  key: ${{ runner.os }}-vitepress-${{ hashFiles('pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-vitepress-
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Build
+              run: pnpm run build
