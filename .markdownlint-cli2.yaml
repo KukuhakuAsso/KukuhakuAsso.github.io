@@ -1,0 +1,54 @@
+# markdownlint-cli2 配置：适合含大量转载 HTML 内容的 VitePress 站点
+config:
+  default: true
+  # 行内 HTML：wiki 转载内容大量使用
+  MD033: false
+  # 行长度限制
+  MD013: false
+  # 重复标题（转载文章常见）
+  MD024: false
+  # 多级 H1 / 首行标题限制
+  MD025: false
+  MD041: false
+  # 标题末尾标点（中文标题常见）
+  MD026: false
+  # 强调代替标题 / 强调风格
+  MD036: false
+  MD049: false
+  MD050: false
+  # 图片 alt 文本
+  MD045: false
+  # 代码块风格 / 语言标注
+  MD040: false
+  MD046: false
+  MD048: false
+  # 裸 URL
+  MD034: false
+  # 标题层级跳级（转载内容常见）
+  MD001: false
+  # 空行/空格类排版规则（wiki 转载内容不强制）
+  MD009: false
+  MD012: false
+  MD022: false
+  MD028: false
+  MD031: false
+  MD032: false
+  MD037: false
+  MD058: false
+  # 表格样式（转载表格不强制对齐）
+  MD055: false
+  MD060: false
+  # 链接片段：默认 slugify 与 VitePress 不一致（如 M.S.jpg -> m-s-jpg），易误报
+  MD051: false
+
+globs:
+  - "**/*.md"
+
+ignores:
+  - "**/node_modules/**"
+  - "dist-preview/**"
+  - "docs/.vitepress/cache/**"
+  - "docs/.vitepress/dist/**"
+  - "docs/public/**"
+  - "tmp_scripts/**"
+  - ".github/**"

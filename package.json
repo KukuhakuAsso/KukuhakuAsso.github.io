@@ -11,7 +11,7 @@
         "pnpm": ">=11"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "node scripts/test-all.mjs",
         "docs:dev": "vitepress dev docs",
         "docs:build": "vitepress build docs",
         "docs:preview": "vitepress preview docs",
@@ -19,7 +19,13 @@
         "proj:dev": "node scripts/dev-one.mjs",
         "new:project": "node scripts/create-project.mjs",
         "build": "node scripts/build-all.mjs",
-        "preview": "vite preview --outDir dist-preview"
+        "preview": "vite preview --outDir dist-preview",
+        "clean": "node scripts/clean.mjs",
+        "lint": "pnpm run lint:md && pnpm run lint:js",
+        "lint:md": "markdownlint-cli2",
+        "lint:js": "eslint .",
+        "check:projects": "node scripts/check-projects.mjs",
+        "check:links": "node scripts/check-links.mjs"
     },
     "baseUrl": "https://www.ku2hakuasso.site",
     "repository": {
@@ -35,7 +41,10 @@
     },
     "homepage": "https://github.com/KukuhakuAsso/KukuhakuAsso.github.io#readme",
     "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "eslint": "^10.8.1",
         "feed": "^5.2.1",
+        "markdownlint-cli2": "^0.23.2",
         "vite": "^8.2.0",
         "vitepress": "^2.0.0-alpha.19",
         "vue": "^3.5.40"
