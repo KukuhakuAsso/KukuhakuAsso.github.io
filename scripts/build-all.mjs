@@ -26,7 +26,7 @@ try {
     // 2. 构建 VitePress 博客本体
     console.log("📦 正在构建 VitePress 博客...");
     // ✨ 修复：显式指定在 ROOT_DIR 下执行命令，防止找不到 docs 目录
-    execSync("npx vitepress build docs", { cwd: ROOT_DIR, stdio: "inherit" });
+    execSync("pnpm vitepress build docs", { cwd: ROOT_DIR, stdio: "inherit" });
 
     // 复制博客产物
     const vitepressDist = path.resolve(ROOT_DIR, "docs/.vitepress/dist");
@@ -39,11 +39,27 @@ try {
         // ✨ 优化：计算出子项目的绝对路径
         const absoluteProjectDir = path.resolve(ROOT_DIR, project.dir);
 
-        // ✨ 修复：直接切换到子项目目录下执行 build，比 --prefix 更稳健
-        execSync(`npm run build`, {
-            cwd: absoluteProjectDir,
-            stdio: "inherit",
-        });
+        // ✨ 使用 projects.json 中声明的 buildCmd，失败时退回默认命令
+        const DEFAULT_BUILD_CMD = "pnpm run build";
+        const buildCmd = project.buildCmd || DEFAULT_BUILD_CMD;
+        try {
+            execSync(buildCmd, {
+                cwd: absoluteProjectDir,
+                stdio: "inherit",
+            });
+        } catch (err) {
+            if (buildCmd !== DEFAULT_BUILD_CMD) {
+                console.warn(
+                    `⚠ 使用 [${buildCmd}] 构建失败，退回默认命令 [${DEFAULT_BUILD_CMD}]...`,
+                );
+                execSync(DEFAULT_BUILD_CMD, {
+                    cwd: absoluteProjectDir,
+                    stdio: "inherit",
+                });
+            } else {
+                throw err;
+            }
+        }
 
         // ✨ 关键修复：改用 ROOT_DIR 解析源文件路径，不再误入 scripts 文件夹
         const sourceDir = path.resolve(

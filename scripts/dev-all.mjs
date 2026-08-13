@@ -1,8 +1,9 @@
 // scripts/dev-all.mjs
-import { spawn, execSync } from "child_process";
+import { spawn } from "child_process";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { spawnOptions, killTree } from "./proc-utils.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, "..");
@@ -15,14 +16,8 @@ console.log("🚀 正在并发启动所有项目的开发服务器...\n");
 
 const runningProcesses = [];
 
-// 💡 核心修复 1：把 stdin 设为 ignore，防止子进程（Vite）抢占我们在 Git Bash 的键盘输入
-const spawnOptions = {
-    shell: true,
-    stdio: ["ignore", "inherit", "inherit"], // [stdin, stdout, stderr]
-};
-
 // 1. 启动 VitePress 博客
-const docsServer = spawn("npx", ["vitepress", "dev", "docs"], {
+const docsServer = spawn("pnpm", ["vitepress", "dev", "docs"], {
     ...spawnOptions,
     cwd: ROOT_DIR,
 });
@@ -33,7 +28,7 @@ for (const project of projectTable) {
     console.log(
         `🔗 正在拉起子项目开发服务器: ${project.name} (端口预测: ${project.devPort})`,
     );
-    const subServer = spawn("npm", ["run", "dev"], {
+    const subServer = spawn("pnpm", ["run", "dev"], {
         ...spawnOptions,
         cwd: path.resolve(ROOT_DIR, project.dir),
     });
@@ -49,22 +44,7 @@ const killAll = () => {
     isExiting = true;
     console.log("\n🛑 接收到退出信号，正在强制清场...");
 
-    runningProcesses.forEach((proc) => {
-        if (proc.pid) {
-            try {
-                if (process.platform === "win32") {
-                    // Windows 下暴力斩树
-                    execSync(`taskkill /pid ${proc.pid} /T /F`, {
-                        stdio: "ignore",
-                    });
-                } else {
-                    proc.kill("SIGKILL");
-                }
-            } catch (e) {
-                // 忽略已退出的进程抛错
-            }
-        }
-    });
+    runningProcesses.forEach((proc) => killTree(proc.pid));
 
     console.log("✨ 所有后台进程已干净退出。\n");
     process.exit(0);
