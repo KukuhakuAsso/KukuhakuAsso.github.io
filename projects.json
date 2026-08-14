@@ -9,5 +9,16 @@
         "proxyApi": [
             "/api-scf"
         ]
+    },
+    {
+        "name": "mistarg2anns",
+        "dir": "vue-mistarg2anns",
+        "buildCmd": "pnpm run build",
+        "outputDir": "output",
+        "subPath": "mistarg2anns",
+        "devPort": 5176,
+        "proxyApi": [
+            "/api-mist"
+        ]
     }
 ]
