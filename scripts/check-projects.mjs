@@ -77,9 +77,10 @@ for (const p of projects) {
         } else {
             seenSubPath.set(sp, label);
         }
-        if (!/^[A-Za-z0-9][A-Za-z0-9_-]*$/.test(sp)) {
+        // subPath 允许嵌套（如 mistarg/2anns），只禁止首字符非字母数字
+        if (!/^[A-Za-z0-9][A-Za-z0-9_/-]*$/.test(sp)) {
             warnings.push(
-                `[${label}] subPath "${sp}" 含特殊字符，建议仅用字母/数字/-/_`,
+                `[${label}] subPath "${sp}" 含特殊字符，建议仅用字母/数字/-/_/ 并以字母或数字开头`,
             );
         }
     }

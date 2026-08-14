@@ -57,7 +57,9 @@ jobs:
                   retention-days: 1
 
     # 2. 部署到 dist 分支（CVM 拉取模式）+ 触发钩子
+    # 仅 upstream 仓库执行，fork 不推送 dist 分支、不触发钩子
     deploy_dist:
+        if: github.repository == 'KukuhakuAsso/KukuhakuAsso.github.io'
         needs: build
         runs-on: ubuntu-latest
         steps:
