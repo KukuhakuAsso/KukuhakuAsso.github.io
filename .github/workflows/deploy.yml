@@ -21,21 +21,21 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Source
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: Install pnpm
-              uses: pnpm/action-setup@v4
+              uses: pnpm/action-setup@v6
               with:
                   version: 11
 
             - name: Set up Node
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
                   node-version: 24
                   cache: pnpm
 
             - name: Cache VitePress build cache
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: |
                       docs/.vitepress/cache
@@ -50,7 +50,7 @@ jobs:
                   pnpm run build
 
             - name: Upload build artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                   name: site
                   path: dist-preview
@@ -62,10 +62,10 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Source
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: Download build artifact
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v8
               with:
                   name: site
                   path: dist-preview
@@ -90,7 +90,7 @@ jobs:
             url: ${{ steps.deployment.outputs.page_url }}
         steps:
             - name: Checkout Repository
-              uses: actions/checkout@v4 # 必须 checkout，才能拿到 .github 下的文件
+              uses: actions/checkout@v7 # 必须 checkout，才能拿到 .github 下的文件
 
             # 如果 .github/page 下只有 index.html，需要生成一份 404.html
             - name: Prepare Redirect Files
@@ -100,13 +100,13 @@ jobs:
                   cp .github/page/index.html page/404.html
 
             - name: Setup Pages
-              uses: actions/configure-pages@v4
+              uses: actions/configure-pages@v6
 
             - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
+              uses: actions/upload-pages-artifact@v5
               with:
                   path: page # 上传处理后的目录
 
             - name: Deploy to GitHub Pages
               id: deployment
-              uses: actions/deploy-pages@v4
+              uses: actions/deploy-pages@v5
