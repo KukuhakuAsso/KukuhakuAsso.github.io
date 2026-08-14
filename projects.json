@@ -15,7 +15,7 @@
         "dir": "vue-mistarg2anns",
         "buildCmd": "pnpm run build",
         "outputDir": "output",
-        "subPath": "mistarg2anns",
+        "subPath": "mistarg/2anns",
         "devPort": 5176,
         "proxyApi": [
             "/api-mist"
