@@ -85,7 +85,10 @@ jobs:
                   curl -k -s -X POST "${{ secrets.HOOK_URL }}" > /dev/null 2>&1
 
     # 3. 部署 GitHub Pages 跳转页（.github/page）
+    # 仅 upstream 仓库执行，fork 不部署 Pages（fork 未启用 Pages 会导致 configure-pages 报
+    # "Get Pages site failed / Not Found"）
     deploy_pages:
+        if: github.repository == 'KukuhakuAsso/KukuhakuAsso.github.io'
         runs-on: ubuntu-latest
         environment:
             name: github-pages
